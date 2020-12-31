@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ColorMeterKit",
+        "repositoryURL": "git@github.com:chenlongming/ColorMeterKit.git",
+        "state": {
+          "branch": null,
+          "revision": "835cb5d8bd31c4f2bbbc269ddda077396b01f758",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
