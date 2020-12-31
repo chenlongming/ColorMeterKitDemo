@@ -13,8 +13,8 @@ import ColorMeterKit
 class PeripheralDetailViewController: UIViewController {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var colorView: UIView!
-    @IBOutlet var labLabels: [UIView]!
-    @IBOutlet var rgbLabels: [UIView]!
+    @IBOutlet var labLabels: [UILabel]!
+    @IBOutlet var rgbLabels: [UILabel]!
     @IBOutlet var measureButton: UIButton! {
         didSet {
             measureButton.isEnabled = false
@@ -54,31 +54,22 @@ class PeripheralDetailViewController: UIViewController {
             .subscribe { data in
                 if let data = data {
                     let color = CMColor(spectral: data.refs.map({ Double($0) }), waveStart: Int(data.waveStart), lightSource: .init(angle: .deg10, category: .D65))
-                    print("Lab: \(color.lab!), XYZ: \(color.xyz!), RGB: \(color.rgb!)")
+                    let (red, green, blue) = color.rgb
+                    let (l, a, b) = color.lab
+                    DispatchQueue.main.async {
+                        self.colorView.backgroundColor = UIColor(red: CGFloat(red) / 255, green: CGFloat(green) / 255, blue: CGFloat(blue) / 255, alpha: 1)
+                        self.labLabels.first(where: { $0.restorationIdentifier == "l" })?.text = String(l)
+                        self.labLabels.first(where: { $0.restorationIdentifier == "a" })?.text = String(a)
+                        self.labLabels.first(where: { $0.restorationIdentifier == "b" })?.text = String(b)
+                        
+                        self.rgbLabels.first(where: { $0.restorationIdentifier == "red" })?.text = String(red)
+                        self.rgbLabels.first(where: { $0.restorationIdentifier == "green" })?.text = String(green)
+                        self.rgbLabels.first(where: { $0.restorationIdentifier == "blue" })?.text = String(blue)
+                    }
                 }
             } onError: { error in
                 print("measure error: \(error)")
             }
-        
-//        _ = cm.getStorageData(0).subscribe(onNext: { print($0!) }, onError: { print("error \($0)") })
-        
-//        _ = cm.getStorageCount()
-//            .concatMap { count -> Observable<Int> in
-//                return .from(0 ..< count)
-//            }
-//            .concatMap { index -> Observable<MeasureData?> in
-//                return self.cm.getStorageData(UInt16(index)).retry(2).map { data in
-//                    print("------------------------ index: \(index) ------------------------")
-//                    print(data)
-//                    print("------------------------ end ------------------------")
-//                    return data
-//                }
-//            }
-//            .subscribe()
-        
-//        _ = cm.getPeripheralDetail()
-//            .subscribe(onNext: { print($0) })
-//        _ = cm.setToleranceParameter(.init(L: 2, a: 2, b: 2, c: 2, H: 2, dE_ab: 3, dE_ch: 2, dE_cmc: 2, dE_94: 2, dE_00: 2)).subscribe()
     }
     
     /*
